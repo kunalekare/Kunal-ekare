@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">VidyaSetu</string>
+    <string name="app_tagline">Class 10 to Bachelor\'s Learning Platform</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get Started</string>
+    <string name="onboarding_title_1">Learn from Class 10 to Degree</string>
+    <string name="onboarding_desc_1">Comprehensive curriculum for Class 10th, 11th, 12th, Competitive Entrance (JEE/NEET/CUET), and Bachelor\'s tech skill tracks.</string>
+    <string name="onboarding_title_2">Practice Tests &amp; Track Growth</string>
+    <string name="onboarding_desc_2">Chapter-wise quizzes, real-time rank simulation, detailed solutions, and instant weak-topic recommendations.</string>
+    <string name="onboarding_title_3">Instant Doubt Resolution</string>
+    <string name="onboarding_desc_3">Ask doubts anytime, upload textbook diagrams, and receive verified step-by-step solutions from expert faculties.</string>
+
+    <!-- Authentication -->
+    <string name="auth_welcome">Welcome to VidyaSetu</string>
+    <string name="auth_subtitle">Sign in to sync your progress, bookmarks, and tests</string>
+    <string name="auth_sign_in_google">Sign in with Google</string>
+    <string name="auth_phone_tab">Phone OTP</string>
+    <string name="auth_email_tab">Email / Password</string>
+    <string name="auth_phone_label">Mobile Number</string>
+    <string name="auth_phone_placeholder">Enter 10-digit mobile number</string>
+    <string name="auth_send_otp">Send OTP</string>
+    <string name="auth_verify_otp">Verify &amp; Continue</string>
+    <string name="auth_enter_otp">Enter 6-digit verification code</string>
+    <string name="auth_resend_otp">Resend OTP</string>
+    <string name="auth_email_label">Email Address</string>
+    <string name="auth_password_label">Password</string>
+    <string name="auth_login_button">Login</string>
+    <string name="auth_register_button">Create Account</string>
+    <string name="auth_forgot_password">Forgot Password?</string>
+    <string name="auth_terms_agreement">By signing in, you agree to our Terms of Service &amp; Privacy Policy</string>
+
+    <!-- Profile Setup -->
+    <string name="profile_setup_title">Set Up Your Learning Profile</string>
+    <string name="profile_setup_step_1">Personal Details</string>
+    <string name="profile_setup_step_2">Academic Level</string>
+    <string name="profile_setup_step_3">Stream / Target Exam</string>
+    <string name="profile_setup_step_4">Language Preference</string>
+    <string name="profile_setup_step_5">Daily Goal &amp; Compliance</string>
+    <string name="profile_full_name">Full Name</string>
+    <string name="profile_city">City / District</string>
+    <string name="profile_dob">Date of Birth (DD/MM/YYYY)</string>
+    <string name="profile_parent_consent_title">Parental Consent (Required for Under 18)</string>
+    <string name="profile_parent_contact">Parent\'s Mobile Number / Email</string>
+    <string name="profile_save_continue">Save &amp; Continue</string>
+    <string name="profile_finish">Complete Setup</string>
+
+    <!-- Errors -->
+    <string name="error_network">No internet connection. Please check your network.</string>
+    <string name="error_invalid_phone">Please enter a valid 10-digit phone number.</string>
+    <string name="error_invalid_otp">Please enter a valid 6-digit OTP code.</string>
+    <string name="error_invalid_email">Please enter a valid email address.</string>
+    <string name="error_weak_password">Password must be at least 6 characters.</string>
+    <string name="error_terms_required">Please accept the Terms of Service to continue.</string>
+    <string name="error_parent_consent_required">Parent contact is required for students under 18.</string>
+</resources>

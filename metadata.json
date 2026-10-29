@@ -1,0 +1,6 @@
+{
+  "name": "VidyaSetu",
+  "description": "All-in-one learning platform for Class 10 to Bachelor's degree students with courses, practice tests, notes, doubts, and career skill roadmaps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

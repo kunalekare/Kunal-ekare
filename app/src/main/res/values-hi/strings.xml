@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">विद्यासेतु</string>
+    <string name="app_tagline">कक्षा 10वीं से स्नातक तक अध्ययन मंच</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">छोड़ें</string>
+    <string name="onboarding_next">आगे बढ़ें</string>
+    <string name="onboarding_get_started">शुरू करें</string>
+    <string name="onboarding_title_1">कक्षा 10 से डिग्री तक सीखें</string>
+    <string name="onboarding_desc_1">10वीं, 11वीं, 12वीं, प्रवेश परीक्षा (JEE/NEET/CUET), और स्नातक कौशल के लिए संपूर्ण पाठ्यक्रम।</string>
+    <string name="onboarding_title_2">मॉक टेस्ट और प्रगति ट्रैकिंग</string>
+    <string name="onboarding_desc_2">अध्याय-वार क्विज़, वास्तविक समय रैंक और विस्तृत समाधान।</string>
+    <string name="onboarding_title_3">त्वरित शंका समाधान</string>
+    <string name="onboarding_desc_3">कभी भी प्रश्न पूछें और विशेषज्ञ शिक्षकों से सत्यापित चरण-दर-चरण समाधान प्राप्त करें।</string>
+
+    <!-- Authentication -->
+    <string name="auth_welcome">विद्यासेतु में आपका स्वागत है</string>
+    <string name="auth_subtitle">अपनी प्रगति और टेस्ट को सिंक करने के लिए साइन इन करें</string>
+    <string name="auth_sign_in_google">Google के साथ साइन इन करें</string>
+    <string name="auth_phone_tab">फ़ोन OTP</string>
+    <string name="auth_email_tab">ईमेल / पासवर्ड</string>
+    <string name="auth_phone_label">मोबाइल नंबर</string>
+    <string name="auth_phone_placeholder">10 अंकों का मोबाइल नंबर दर्ज करें</string>
+    <string name="auth_send_otp">OTP भेजें</string>
+    <string name="auth_verify_otp">सत्यापित करें और आगे बढ़ें</string>
+    <string name="auth_enter_otp">6 अंकों का सत्यापन कोड दर्ज करें</string>
+    <string name="auth_resend_otp">OTP पुनः भेजें</string>
+    <string name="auth_email_label">ईमेल पता</string>
+    <string name="auth_password_label">पासवर्ड</string>
+    <string name="auth_login_button">लॉगिन</string>
+    <string name="auth_register_button">खाता बनाएं</string>
+    <string name="auth_forgot_password">पासवर्ड भूल गए?</string>
+    <string name="auth_terms_agreement">साइन इन करके आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं</string>
+
+    <!-- Profile Setup -->
+    <string name="profile_setup_title">अपनी प्रोफाइल सेट करें</string>
+    <string name="profile_setup_step_1">व्यक्तिगत विवरण</string>
+    <string name="profile_setup_step_2">कक्षा / स्तर</string>
+    <string name="profile_setup_step_3">स्ट्रीम / लक्ष्य परीक्षा</string>
+    <string name="profile_setup_step_4">भाषा प्राथमिकता</string>
+    <string name="profile_setup_step_5">दैनिक लक्ष्य</string>
+    <string name="profile_full_name">पूरा नाम</string>
+    <string name="profile_city">शहर / ज़िला</string>
+    <string name="profile_dob">जन्म तिथि (DD/MM/YYYY)</string>
+    <string name="profile_parent_consent_title">अभिभावक सहमति (18 वर्ष से कम के लिए)</string>
+    <string name="profile_parent_contact">अभिभावक का मोबाइल / ईमेल</string>
+    <string name="profile_save_continue">सहेजें और आगे बढ़ें</string>
+    <string name="profile_finish">पूर्ण करें</string>
+
+    <!-- Errors -->
+    <string name="error_network">इंटरनेट कनेक्शन नहीं है। कृपया अपना नेटवर्क जांचें।</string>
+    <string name="error_invalid_phone">कृपया वैध 10 अंकों का मोबाइल नंबर दर्ज करें।</string>
+    <string name="error_invalid_otp">कृपया वैध 6 अंकों का OTP दर्ज करें।</string>
+    <string name="error_invalid_email">कृपया एक मान्य ईमेल पता दर्ज करें।</string>
+    <string name="error_weak_password">पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।</string>
+    <string name="error_terms_required">कृपया जारी रखने के लिए सेवा की शर्तें स्वीकार करें।</string>
+    <string name="error_parent_consent_required">18 वर्ष से कम उम्र के छात्रों के लिए अभिभावक का संपर्क आवश्यक है।</string>
+</resources>

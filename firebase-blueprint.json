@@ -1,0 +1,29 @@
+{
+  "entities": {
+    "User": {
+      "collection": "users",
+      "fields": {
+        "userId": { "type": "string", "required": true },
+        "fullName": { "type": "string", "required": true },
+        "email": { "type": "string", "required": false },
+        "phoneNumber": { "type": "string", "required": false },
+        "role": { "type": "string", "required": true },
+        "level": { "type": "string", "required": true },
+        "stream": { "type": "string", "required": false },
+        "targetExam": { "type": "string", "required": false },
+        "language": { "type": "string", "required": true },
+        "city": { "type": "string", "required": false },
+        "dailyGoalMinutes": { "type": "number", "required": false },
+        "reminderTime": { "type": "string", "required": false },
+        "isMinor": { "type": "boolean", "required": false },
+        "parentConsentGiven": { "type": "boolean", "required": false },
+        "parentEmailOrPhone": { "type": "string", "required": false },
+        "termsAccepted": { "type": "boolean", "required": true },
+        "streakDays": { "type": "number", "required": false },
+        "xpPoints": { "type": "number", "required": false },
+        "createdAt": { "type": "timestamp", "required": false },
+        "updatedAt": { "type": "timestamp", "required": false }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">विद्यासेतू</string>
+    <string name="app_tagline">इयत्ता १०वी ते पदवी शिक्षण प्लॅटफॉर्म</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">वगळा</string>
+    <string name="onboarding_next">पुढे चला</string>
+    <string name="onboarding_get_started">सुरू करा</string>
+    <string name="onboarding_title_1">इयत्ता १०वी ते पदवीपर्यंत शिका</string>
+    <string name="onboarding_desc_1">१०वी, ११वी, १२वी, प्रवेश परीक्षा (JEE/NEET/MHT-CET) आणि पदवी कौशल्य ट्रॅकसाठी परिपूर्ण अभ्यासक्रम.</string>
+    <string name="onboarding_title_2">सराव चाचण्या आणि प्रगती</string>
+    <string name="onboarding_desc_2">धडा-निहाय प्रश्नमंजुषा, रिअल-टाइम रँक आणि सविस्तर उत्तरे.</string>
+    <string name="onboarding_title_3">त्वरित शंका निरसन</string>
+    <string name="onboarding_desc_3">कधीही शंका विचारा आणि अनुभवी शिक्षकांकडून अचूक पायरी-निहाय उत्तरे मिळवा.</string>
+
+    <!-- Authentication -->
+    <string name="auth_welcome">विद्यासेतूमध्ये आपले स्वागत आहे</string>
+    <string name="auth_subtitle">आपली प्रगती आणि चाचण्या सिंक करण्यासाठी साइन इन करा</string>
+    <string name="auth_sign_in_google">Google ने साइन इन करा</string>
+    <string name="auth_phone_tab">फोन OTP</string>
+    <string name="auth_email_tab">ईमेल / पासवर्ड</string>
+    <string name="auth_phone_label">मोबाईल नंबर</string>
+    <string name="auth_phone_placeholder">१० अंकी मोबाईल नंबर टाका</string>
+    <string name="auth_send_otp">OTP पाठवा</string>
+    <string name="auth_verify_otp">सत्यापित करा आणि पुढे जा</string>
+    <string name="auth_enter_otp">६ अंकी OTP कोड टाका</string>
+    <string name="auth_resend_otp">OTP पुन्हा पाठवा</string>
+    <string name="auth_email_label">ईमेल पत्ता</string>
+    <string name="auth_password_label">पासवर्ड</string>
+    <string name="auth_login_button">लॉगिन</string>
+    <string name="auth_register_button">खाते तयार करा</string>
+    <string name="auth_forgot_password">पासवर्ड विसरलात?</string>
+    <string name="auth_terms_agreement">साइन इन करून आपण आमच्या सेवा अटी आणि गोपनीयता धोरणास सहमती देता</string>
+
+    <!-- Profile Setup -->
+    <string name="profile_setup_title">आपली प्रोफाइल सेट करा</string>
+    <string name="profile_setup_step_1">वैयक्तिक तपशील</string>
+    <string name="profile_setup_step_2">इयत्ता / पातळी</string>
+    <string name="profile_setup_step_3">प्रवाह / लक्ष्य परीक्षा</string>
+    <string name="profile_setup_step_4">भाषा निवड</string>
+    <string name="profile_setup_step_5">दैनिक उद्दिष्ट</string>
+    <string name="profile_full_name">पूर्ण नाव</string>
+    <string name="profile_city">शहर / जिल्हा</string>
+    <string name="profile_dob">जन्मतारीख (DD/MM/YYYY)</string>
+    <string name="profile_parent_consent_title">पालकांची संमती (१८ वर्षांखालील विद्यार्थ्यांसाठी)</string>
+    <string name="profile_parent_contact">पालकांचा मोबाईल / ईमेल</string>
+    <string name="profile_save_continue">जतन करा आणि पुढे जा</string>
+    <string name="profile_finish">पूर्ण करा</string>
+
+    <!-- Errors -->
+    <string name="error_network">इंटरनेट कनेक्शन नाही. कृपया नेटवर्क तपासा.</string>
+    <string name="error_invalid_phone">कृपया वैध १० अंकी मोबाईल नंबर टाका.</string>
+    <string name="error_invalid_otp">कृपया वैध ६ अंकी OTP टाका.</string>
+    <string name="error_invalid_email">कृपया वैध ईमेल पत्ता टाका.</string>
+    <string name="error_weak_password">पासवर्ड किमान ६ वर्णांचा असावा.</string>
+    <string name="error_terms_required">कृपया पुढे जाण्यासाठी सेवा अटी मान्य करा.</string>
+    <string name="error_parent_consent_required">१८ वर्षांखालील विद्यार्थ्यांसाठी पालकांचा संपर्क आवश्यक आहे.</string>
+</resources>
