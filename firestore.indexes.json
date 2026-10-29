@@ -1,0 +1,29 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "courses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "targetLevel", "order": "ASCENDING" },
+        { "fieldPath": "rating", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "courses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "targetLevel", "order": "ASCENDING" },
+        { "fieldPath": "priceInr", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "doubts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "subject", "order": "ASCENDING" },
+        { "fieldPath": "upvotesCount", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

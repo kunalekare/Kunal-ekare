@@ -207,6 +207,18 @@ fun AuthScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Guest / Explore App Button
+        VidyaOutlinedButton(
+            text = "Explore Platform as Guest",
+            onClick = {
+                onAuthSuccess("guest_student")
+            },
+            modifier = Modifier.fillMaxWidth(),
+            tag = "btn_continue_as_guest"
+        )
+
         Spacer(modifier = Modifier.height(24.dp))
 
         // Divider

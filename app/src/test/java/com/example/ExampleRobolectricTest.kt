@@ -38,4 +38,12 @@ class ExampleRobolectricTest {
         val course = repo.getCourseById(class10Courses.first().id)
         assertNotNull("Should find course by id", course)
     }
+
+    @Test
+    fun `test MainActivity launches without crash`() {
+        val controller = org.robolectric.Robolectric.buildActivity(MainActivity::class.java)
+        controller.create().start().resume()
+        val activity = controller.get()
+        assertNotNull("Activity should launch successfully", activity)
+    }
 }

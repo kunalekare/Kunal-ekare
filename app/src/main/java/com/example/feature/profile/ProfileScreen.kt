@@ -237,9 +237,10 @@ fun ProfileScreen(
             }
         }
 
-        // Role & Teacher Mode Switcher
-        item {
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        // Role & Teacher Mode Switcher (Visible in Debug only)
+        if (com.example.BuildConfig.DEBUG) {
+            item {
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text(
                     text = "APP ROLE & ACCESS",
                     style = MaterialTheme.typography.labelSmall,
@@ -301,9 +302,20 @@ fun ProfileScreen(
                             modifier = Modifier.testTag("switch_teacher_mode")
                         )
                     }
+
+                    if (currentRole != UserRole.STUDENT) {
+                        HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
+                        ProfileMenuItem(
+                            icon = Icons.Default.AdminPanelSettings,
+                            title = "Open Educator Studio",
+                            subtitle = "Access syllabus upload and doubt moderation",
+                            onClick = onNavigateToAdmin
+                        )
+                    }
                 }
             }
         }
+    }
 
         // General Tools & Compliance
         item {

@@ -47,18 +47,30 @@ interface AuthRepository {
 }
 
 class FirebaseAuthRepository(
-    private val auth: FirebaseAuth = Firebase.auth
+    customAuth: FirebaseAuth? = null
 ) : AuthRepository {
 
-    override val currentUserId: String? get() = auth.currentUser?.uid
-    override val currentUser: FirebaseUser? get() = auth.currentUser
+    private val auth: FirebaseAuth? = customAuth ?: try {
+        Firebase.auth
+    } catch (e: Exception) {
+        null
+    }
+
+    override val currentUserId: String? get() = auth?.currentUser?.uid
+    override val currentUser: FirebaseUser? get() = auth?.currentUser
 
     override val authStateFlow: Flow<FirebaseUser?> = callbackFlow {
+        val targetAuth = auth
+        if (targetAuth == null) {
+            trySend(null)
+            awaitClose { }
+            return@callbackFlow
+        }
         val listener = FirebaseAuth.AuthStateListener { fbAuth ->
             trySend(fbAuth.currentUser)
         }
-        auth.addAuthStateListener(listener)
-        awaitClose { auth.removeAuthStateListener(listener) }
+        targetAuth.addAuthStateListener(listener)
+        awaitClose { targetAuth.removeAuthStateListener(listener) }
     }
 
     override suspend fun signInWithGoogleCredential(activity: Activity): Resource<String> {
@@ -79,7 +91,8 @@ class FirebaseAuthRepository(
             if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                 val googleIdToken = GoogleIdTokenCredential.createFrom(credential.data).idToken
                 val authCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
-                val authResult = auth.signInWithCredential(authCredential).await()
+                val targetAuth = auth ?: return Resource.Error(AppError.Authentication("Authentication service not initialized"))
+                val authResult = targetAuth.signInWithCredential(authCredential).await()
                 val uid = authResult.user?.uid ?: return Resource.Error(AppError.Authentication("User ID null"))
                 Resource.Success(uid)
             } else {
@@ -98,10 +111,16 @@ class FirebaseAuthRepository(
         onCodeSent: (verificationId: String) -> Unit,
         onError: (String) -> Unit
     ) {
+        val targetAuth = auth
+        if (targetAuth == null) {
+            onError("Authentication service not initialized")
+            return
+        }
+
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                 // Auto-retrieval or instant verification
-                auth.signInWithCredential(credential)
+                targetAuth.signInWithCredential(credential)
             }
 
             override fun onVerificationFailed(e: com.google.firebase.FirebaseException) {
@@ -113,7 +132,7 @@ class FirebaseAuthRepository(
             }
         }
 
-        val options = PhoneAuthOptions.newBuilder(auth)
+        val options = PhoneAuthOptions.newBuilder(targetAuth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(activity)
@@ -125,8 +144,9 @@ class FirebaseAuthRepository(
 
     override suspend fun verifyPhoneOtp(verificationId: String, code: String): Resource<String> {
         return try {
+            val targetAuth = auth ?: return Resource.Error(AppError.Authentication("Authentication service not initialized"))
             val credential = PhoneAuthProvider.getCredential(verificationId, code)
-            val result = auth.signInWithCredential(credential).await()
+            val result = targetAuth.signInWithCredential(credential).await()
             val uid = result.user?.uid ?: return Resource.Error(AppError.Authentication("User ID null"))
             Resource.Success(uid)
         } catch (e: Exception) {
@@ -145,7 +165,7 @@ class FirebaseAuthRepository(
 
     override suspend fun signOut(context: Context) {
         try {
-            auth.signOut()
+            auth?.signOut()
             val credentialManager = CredentialManager.create(context)
             credentialManager.clearCredentialState(ClearCredentialStateRequest())
         } catch (_: Exception) {}

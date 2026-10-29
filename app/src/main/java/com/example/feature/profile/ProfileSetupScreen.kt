@@ -154,6 +154,23 @@ fun ProfileSetupScreen(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f)
             )
+
+            if (currentStep == 1) {
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        // Skipping personal details defaults to Student and advances to academic preferences
+                        currentStep = 2
+                        errorMsg = null
+                    },
+                    modifier = Modifier.testTag("skip_profile_setup_btn")
+                ) {
+                    Text(
+                        text = "Skip",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))

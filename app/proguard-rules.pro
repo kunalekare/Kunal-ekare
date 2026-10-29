@@ -12,10 +12,24 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve line numbers for stack traces
+-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Preserve Firebase and Room data models and entities
+-keep class com.example.core.model.** { *; }
+-keep class com.example.core.data.local.db.** { *; }
+-keepclassmembers class com.example.core.model.** {
+    public <init>(...);
+    <fields>;
+}
+
+# Preserve Room generated code
+-keep class * extends androidx.room.RoomDatabase
+-dontwarn androidx.room.paging.**
+
+# Preserve Media3 ExoPlayer components
+-keep class androidx.media3.** { *; }
+
+# WorkManager
+-keep class * extends androidx.work.Worker { *; }
+-keep class * extends androidx.work.CoroutineWorker { *; }

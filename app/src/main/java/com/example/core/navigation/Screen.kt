@@ -63,12 +63,14 @@ sealed class Screen(
 
         const val ROUTE_COURSE_DETAIL = "course_detail/{courseId}"
         const val ROUTE_LESSON_VIEWER = "lesson_viewer/{lessonId}"
+        const val ROUTE_PDF_VIEWER = "pdf_viewer/{lessonId}"
         const val ROUTE_TEST_ENGINE = "test_engine/{testId}"
         const val ROUTE_ASK_DOUBT = "ask_doubt"
         const val ROUTE_ADMIN_PANEL = "admin_panel"
 
         fun courseDetail(courseId: String): String = "course_detail/$courseId"
         fun lessonViewer(lessonId: String): String = "lesson_viewer/$lessonId"
+        fun pdfViewer(lessonId: String): String = "pdf_viewer/$lessonId"
         fun testEngine(testId: String): String = "test_engine/$testId"
     }
 }

@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.CloudQueue
 import androidx.compose.material.icons.filled.EventNote
 import androidx.compose.material.icons.filled.Functions
 import androidx.compose.material.icons.filled.HelpOutline
@@ -105,6 +106,37 @@ fun HomeScreen(
                 .testTag("home_feed_list"),
             contentPadding = PaddingValues(bottom = 96.dp)
         ) {
+            // Guest / Offline Mode banner
+            if (container.authRepository.currentUser == null) {
+                item {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 6.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CloudQueue,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Guest Mode • Free previews unlocked. Sign in to sync progress.",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+
             // Level Selector Chips
             item {
                 Column(modifier = Modifier.padding(top = 12.dp, bottom = 8.dp)) {

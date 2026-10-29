@@ -22,11 +22,13 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Quiz
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +73,9 @@ import com.example.feature.courses.CoursesScreen
 import com.example.feature.doubts.DoubtsScreen
 import com.example.feature.home.HomeScreen
 import com.example.feature.onboarding.OnboardingScreen
+import com.example.feature.player.PdfViewerScreen
+import com.example.feature.player.VideoPlayerScreen
+import com.example.feature.profile.AdminPanelScreen
 import com.example.feature.profile.ProfileScreen
 import com.example.feature.profile.ProfileSetupScreen
 import com.example.feature.tests.TestsScreen
@@ -91,7 +97,7 @@ fun VidyaNavHost(
         composable(Screen.ROUTE_ONBOARDING) {
             OnboardingScreen(
                 onFinished = {
-                    navController.navigate(Screen.ROUTE_AUTH) {
+                    navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.ROUTE_ONBOARDING) { inclusive = true }
                     }
                 }
@@ -101,7 +107,7 @@ fun VidyaNavHost(
         composable(Screen.ROUTE_AUTH) {
             AuthScreen(
                 onAuthSuccess = { userId ->
-                    navController.navigate(Screen.ROUTE_PROFILE_SETUP) {
+                    navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.ROUTE_AUTH) { inclusive = true }
                     }
                 }
@@ -177,8 +183,43 @@ fun VidyaNavHost(
             CourseDetailScreen(
                 courseId = courseId,
                 onBackClick = { navController.popBackStack() },
-                onStartLesson = { lessonId ->
-                    navController.navigate(Screen.lessonViewer(lessonId))
+                onStartLesson = { lesson ->
+                    if (lesson.type == LessonType.VIDEO) {
+                        navController.safeNavigate(Screen.lessonViewer(lesson.id))
+                    } else {
+                        navController.safeNavigate(Screen.pdfViewer(lesson.id))
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.ROUTE_LESSON_VIEWER,
+            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
+            val userWatermark = container.authRepository.currentUserId?.take(8) ?: "kunal_student"
+            VideoPlayerScreen(
+                lessonTitle = "Lesson Video: $lessonId",
+                userIdWatermark = "UID: $userWatermark",
+                onBackClick = { navController.popBackStack() },
+                onProgressUpdate = { pos, completed ->
+                    // Sync progress
+                }
+            )
+        }
+
+        composable(
+            route = Screen.ROUTE_PDF_VIEWER,
+            arguments = listOf(navArgument("lessonId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val lessonId = backStackEntry.arguments?.getString("lessonId") ?: ""
+            PdfViewerScreen(
+                noteTitle = "Revision Notes ($lessonId)",
+                totalPageCount = 8,
+                onBackClick = { navController.popBackStack() },
+                onPageChanged = { page ->
+                    // Record last read page
                 }
             )
         }
@@ -199,6 +240,30 @@ fun VidyaNavHost(
                 onBackClick = { navController.popBackStack() }
             )
         }
+
+        composable(Screen.ROUTE_ADMIN_PANEL) {
+            val userRole by container.preferencesManager.userRoleFlow
+                .collectAsState(initial = com.example.core.model.UserRole.STUDENT)
+            if (userRole == com.example.core.model.UserRole.TEACHER_ADMIN ||
+                userRole == com.example.core.model.UserRole.SUPER_ADMIN ||
+                com.example.BuildConfig.DEBUG
+            ) {
+                AdminPanelScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Access Restricted: Educator/Admin credentials required.",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -207,18 +272,23 @@ fun VidyaNavHost(
 fun CourseDetailScreen(
     courseId: String,
     onBackClick: () -> Unit,
-    onStartLesson: (String) -> Unit
+    onStartLesson: (com.example.core.model.Lesson) -> Unit
 ) {
     val container = LocalAppContainer.current
     val coroutineScope = rememberCoroutineScope()
-    val course by produceState<Course?>(initialValue = null, key1 = courseId) {
-        value = container.learningRepository.getCourseById(courseId)
+    var isLoading by remember(courseId) { mutableStateOf(true) }
+    var loadedCourse by remember(courseId) { mutableStateOf<Course?>(null) }
+
+    LaunchedEffect(courseId) {
+        isLoading = true
+        loadedCourse = container.learningRepository.getCourseById(courseId)
+        isLoading = false
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(course?.title ?: "Course Detail") },
+                title = { Text(loadedCourse?.title ?: "Course Detail") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -233,17 +303,56 @@ fun CourseDetailScreen(
             )
         }
     ) { padding ->
-        val currentCourse = course
-        if (currentCourse == null) {
+        if (isLoading) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Loading course details...")
+                CircularProgressIndicator()
+            }
+        } else if (loadedCourse == null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .testTag("course_not_found_view"),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.HelpOutline,
+                        contentDescription = "Not Found",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(56.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Course Not Found",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "The course you are looking for is currently unavailable or has been archived.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    VidyaPrimaryButton(
+                        text = "Back to Catalog",
+                        onClick = onBackClick,
+                        tag = "btn_course_not_found_back"
+                    )
+                }
             }
         } else {
+            val currentCourse = loadedCourse!!
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -363,7 +472,7 @@ fun CourseDetailScreen(
 @Composable
 fun ChapterCurriculumItem(
     chapter: com.example.core.model.Chapter,
-    onLessonClick: (String) -> Unit
+    onLessonClick: (com.example.core.model.Lesson) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -387,7 +496,7 @@ fun ChapterCurriculumItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
-                        .clickable { onLessonClick(lesson.id) }
+                        .clickable { onLessonClick(lesson) }
                         .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically

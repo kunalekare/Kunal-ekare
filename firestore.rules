@@ -10,8 +10,12 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
+    function isAnonymous() {
+      return isAuthenticated() && request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
     function isTeacherOrAdmin() {
-      return isAuthenticated() &&
+      return isAuthenticated() && !isAnonymous() &&
         (request.auth.token.role == 'TEACHER_ADMIN' || request.auth.token.role == 'SUPER_ADMIN');
     }
 
@@ -22,44 +26,107 @@ service cloud.firestore {
              data.role is string && (data.role == 'STUDENT' || data.role == 'TEACHER_ADMIN' || data.role == 'SUPER_ADMIN') &&
              data.level is string &&
              data.language is string &&
-             data.termsAccepted is bool && data.termsAccepted == true;
+             data.dateOfBirth is string && data.dateOfBirth.size() >= 8 &&
+             data.termsAccepted is bool && data.termsAccepted == true &&
+             (!data.isMinor || (data.parentConsentGiven == true && data.parentEmailOrPhone is string && data.parentEmailOrPhone.size() > 0));
+    }
+
+    function isValidDoubt(data) {
+      return data.studentId is string &&
+             data.studentId == request.auth.uid &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.description is string && data.description.size() <= 2000 &&
+             data.subject is string;
+    }
+
+    function isValidReply(data) {
+      return data.authorId is string &&
+             data.authorId == request.auth.uid &&
+             data.content is string && data.content.size() > 0 && data.content.size() <= 2000;
+    }
+
+    function hasValidEnrollment(courseId) {
+      return isAuthenticated() && !isAnonymous() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId));
     }
 
     match /users/{userId} {
       allow read: if isOwner(userId) || isTeacherOrAdmin();
       allow create: if isOwner(userId) &&
+                       !isAnonymous() &&
                        isValidUser(request.resource.data) &&
                        request.resource.data.role == 'STUDENT';
       allow update: if isOwner(userId) &&
+                       !isAnonymous() &&
                        isValidUser(request.resource.data) &&
                        // Clients cannot self-escalate role
                        request.resource.data.role == resource.data.role;
-      allow delete: if isOwner(userId);
+      allow delete: if isOwner(userId) && !isAnonymous();
+
+      // User Enrollments subcollection
+      match /enrollments/{courseId} {
+        allow read: if isOwner(userId);
+        // Free enrollment allowed directly by user; paid enrollment handled server-side
+        allow create, update: if isOwner(userId) && !isAnonymous() && (
+          get(/databases/$(database)/documents/courses/$(courseId)).data.priceInr == 0 ||
+          isTeacherOrAdmin()
+        );
+        allow delete: if isTeacherOrAdmin();
+      }
+
+      // User Study Progress subcollection
+      match /progress/{progressId} {
+        allow read, write: if isOwner(userId) && !isAnonymous();
+      }
+
+      // User Bookmarks
+      match /bookmarks/{bookmarkId} {
+        allow read, write: if isOwner(userId) && !isAnonymous();
+      }
     }
 
     match /courses/{courseId} {
       allow read: if isAuthenticated();
       allow write: if isTeacherOrAdmin();
+
+      match /subjects/{subjectId} {
+        allow read: if isAuthenticated();
+        allow write: if isTeacherOrAdmin();
+
+        match /chapters/{chapterId} {
+          allow read: if isAuthenticated();
+          allow write: if isTeacherOrAdmin();
+
+          match /lessons/{lessonId} {
+            // Accessible if course is free, or lesson is free preview, or authenticated non-anonymous user is enrolled
+            allow read: if isAuthenticated() && (
+              resource.data.isFreePreview == true ||
+              get(/databases/$(database)/documents/courses/$(courseId)).data.priceInr == 0 ||
+              (!isAnonymous() && (hasValidEnrollment(courseId) || isTeacherOrAdmin()))
+            );
+            allow write: if isTeacherOrAdmin();
+          }
+        }
+      }
     }
 
     match /doubts/{doubtId} {
       allow read: if isAuthenticated();
-      allow create: if isAuthenticated() &&
-                       request.resource.data.studentId == request.auth.uid &&
-                       request.resource.data.title is string &&
-                       request.resource.data.title.size() > 0;
-      allow update: if isAuthenticated() &&
-                       (request.resource.data.studentId == request.auth.uid || isTeacherOrAdmin());
-      allow delete: if isAuthenticated() &&
+      allow create: if isAuthenticated() && !isAnonymous() && isValidDoubt(request.resource.data);
+      allow update: if isAuthenticated() && !isAnonymous() &&
+                       // Existing document owner can update, cannot change studentId
+                       (resource.data.studentId == request.auth.uid && request.resource.data.studentId == resource.data.studentId && isValidDoubt(request.resource.data) || isTeacherOrAdmin());
+      allow delete: if isAuthenticated() && !isAnonymous() &&
+                       // Must use resource.data on delete (never request.resource)
                        (resource.data.studentId == request.auth.uid || isTeacherOrAdmin());
 
       match /replies/{replyId} {
         allow read: if isAuthenticated();
-        allow create: if isAuthenticated() &&
-                         request.resource.data.authorId == request.auth.uid &&
-                         request.resource.data.content is string;
-        allow update, delete: if isAuthenticated() &&
-                                 (resource.data.authorId == request.auth.uid || isTeacherOrAdmin());
+        allow create: if isAuthenticated() && !isAnonymous() && isValidReply(request.resource.data);
+        allow update: if isAuthenticated() && !isAnonymous() &&
+                         (resource.data.authorId == request.auth.uid && request.resource.data.authorId == resource.data.authorId && isValidReply(request.resource.data) || isTeacherOrAdmin());
+        allow delete: if isAuthenticated() && !isAnonymous() &&
+                         (resource.data.authorId == request.auth.uid || isTeacherOrAdmin());
       }
     }
   }

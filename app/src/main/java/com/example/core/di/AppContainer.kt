@@ -5,6 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import com.example.core.data.local.PreferencesManager
 import com.example.core.data.repository.AuthRepository
 import com.example.core.data.repository.FirebaseAuthRepository
+import com.example.core.data.repository.FirestoreLearningRepository
 import com.example.core.data.repository.FirestoreUserRepository
 import com.example.core.data.repository.InMemoryLearningRepository
 import com.example.core.data.repository.LearningRepository
@@ -23,7 +24,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     }
 
     override val learningRepository: LearningRepository by lazy {
-        InMemoryLearningRepository()
+        FirestoreLearningRepository(context.applicationContext)
     }
 
     override val authRepository: AuthRepository by lazy {
